@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Lost in Translation</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #94b7c8; 
+      color: #3865b3;               /* white text */
+      padding: 20px;
+      text-align: center;
+    }
+
+
+    h2 {
+    font-size: 3em;
+    margin-top: 60px;
+    font-family: 'Quicksand', sans-serif;
+    color: #ffffff; /* inner text color */
+    letter-spacing: 2px;
+    }
+
+    .track {
+      background: #ffffffb0; /* slightly transparent white */
+      border-radius: 20px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+      display: inline-block;
+      padding: 20px;
+      margin: 10px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .track:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    /*floating flags*/
+    .flag {
+      position: absolute;
+      width: 60px;
+      height: auto;
+      opacity: 0.8;
+      animation: float 18s linear infinite;
+      z-index: 1;
+      transform-origin: center;
+      border-radius: 6px;
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(110vh) rotate(0deg);
+        opacity: 0.6;
+      }
+      50% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-20vh) rotate(360deg);
+        opacity: 0.3;
+      }
+    }
+
+  </style>
+</head>
+<body>
+  <h2>꒒ꂦꌗ꓄ ꀤꈤ ꓄ꋪꍏꈤꌗ꒒ꍏ꓄ꀤꂦꈤ</h2>
+  <div id="playlist"></div>
+
+  <script>
+    // Add your mp3 file names here
+    const mp3Files = [
+    { src: 'audios/message1.mp3', label: '1' },
+    { src: 'audios/2_slow.mp3', label: '2' },
+    { src: 'audios/3_slow.mp3', label: '3' },
+    { src: 'audios/laundry_room.mp3', label: '4' },
+    { src: 'audios/5_slow.mp3', label: '5' },
+    { src: 'audios/6_slow.mp3', label: '6' },
+    { src: 'audios/ricketts_house.mp3', label: '7' }
+];
+
+    
+    const container = document.getElementById('playlist');
+
+    mp3Files.forEach(track => {
+    const div = document.createElement('div');
+    div.className = 'track';
+    div.innerHTML = `
+    <strong style="color:#3f63a2;">${track.label}</strong><br>
+    <audio controls src="${track.src}" style="width: 250px;"></audio><br>
+    <label style="color:#555;">Speed: </label>
+    <input type="range" min="0.5" max="2" value="1" step="0.1" class="speed-slider">
+    <span class="speed-value">1×</span>
+  `;
+    container.appendChild(div);
+
+    // Add playback speed control
+    const audio = div.querySelector('audio');
+    const slider = div.querySelector('.speed-slider');
+    const display = div.querySelector('.speed-value');
+
+    slider.addEventListener('input', () => {
+        const speed = parseFloat(slider.value);
+        audio.playbackRate = speed;
+        display.textContent = speed.toFixed(1) + '×';
+    });
+    });
+
+    // --- Floating flags (random appearance) ---
+    const flagImages = [
+    'images/India.png',
+    'images/Turkiye.png',
+    'images/Sweden.png',
+    'images/Italy.png'
+    ];
+
+    function createFlag() {
+    const img = document.createElement('img');
+    img.src = flagImages[Math.floor(Math.random() * flagImages.length)];
+    img.className = 'flag';
+    img.style.left = Math.random() * 100 + 'vw';
+    img.style.animationDuration = 12 + Math.random() * 10 + 's';
+    document.body.appendChild(img);
+
+    // remove after animation to avoid buildup
+    setTimeout(() => img.remove(), 20000);
+    }
+
+    // periodically create new flags
+    setInterval(() => {
+    if (Math.random() < 0.95) createFlag(); // ~80% chance every 2s
+    }, 1000);
+  </script>
+</body>
+</html>
